@@ -1,25 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
+import React, { useEffect } from 'react'
+import Child from './Child'
+import './App.css'
+import axios from 'axios'
+export default function App() {
+  useEffect(()=>{
+    axios.get(
+      '/ajax/comingList?ci=1&limit=10&movieIds=&token=&optimus_uuid=B0CC71C096A911EBA609453370FBFE2C59BC3AF5D61A4344A1A7C05FABCF4D21&optimus_risk_level=71&optimus_code=10'
+      ).then((res)=>{
+        console.log(res.data)
+      })
+  },[])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <div>
+      <ul>
+        <li className='item'>1111111111</li>
+        <li className='item'>2222222222</li>
+      </ul>
+      <Child></Child>
+      </div>
+  )
 }
-
-export default App;
