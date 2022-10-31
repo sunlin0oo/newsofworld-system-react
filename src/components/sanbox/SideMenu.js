@@ -11,6 +11,8 @@ import {
   PieChartOutlined,
 } from '@ant-design/icons';
 import './css/index.css'
+import withRouter from '../../components/WithRouter';
+
 const { Sider } = Layout;
 // 侧边栏
 function getItem(label, key, icon, children, type) {
@@ -52,11 +54,22 @@ const items = [
   ]),
 ];
 
-export default function SideMenu() {
+function SideMenu(props) {
   const [collapsed, setCollapsed] = useState(false);
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
+
+  function click(e) {
+    console.log('e', e);
+    console.log('props', props);
+    //注意this指向问题，采用箭头函数this就指向当前组件
+    props.history.push(e.key);
+  }
+  function openChange() {
+    console.log('OpenChange');
+  }
+
   return (
     // 不知道的去看文档
     <Sider trigger={null} collapsible collapsed={collapsed} reverseArrow={true} >
@@ -73,13 +86,17 @@ export default function SideMenu() {
           {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
         </Button>
         <Menu
-          defaultSelectedKeys={['1']}
-          defaultOpenKeys={['sub1']}
+          defaultSelectedKeys={['/home']}
+          defaultOpenKeys={['/home']}
           mode="inline"
           theme="dark"
           items={items}
+          onOpenChange={() => openChange()}
+          onClick={click}
         />
       </div>
     </Sider>
   )
 }
+
+export default withRouter(SideMenu)

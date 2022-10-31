@@ -15,9 +15,9 @@ export default function IndexRouter() {
             <Route path='/' element={<AuthComponent>{<NewsSandBox />}</AuthComponent>}>
                 <Route path='' element={<Redirect to='/home'></Redirect>}></Route>
                 <Route path='home' element={<Home></Home>}></Route>
-                <Route paht='user-manage/list' element={<UserList></UserList>}></Route>
-                <Route paht='right-manage/role/list' element={<RoleList></RoleList>}></Route>
-                <Route paht='right-manage/right/list' element={<RightList></RightList>}></Route>
+                <Route path='user-manage/list' element={<UserList></UserList>}></Route>
+                <Route path='right-manage/role/list' element={<RoleList></RoleList>}></Route>
+                <Route path='right-manage/right/list' element={<RightList></RightList>}></Route>
             </Route>
             <Route path='*' element={<NotFound></NotFound>}></Route>
         </Routes>

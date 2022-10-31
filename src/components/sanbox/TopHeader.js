@@ -1,10 +1,10 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState } from 'react'
 import {
   UserOutlined ,
   DownOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  SmileOutlined
 } from '@ant-design/icons';
 import { Layout, Dropdown, Space, Menu, Avatar } from 'antd';
 
