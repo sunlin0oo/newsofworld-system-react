@@ -1,0 +1,29 @@
+{
+  "posts": [
+    {
+      "id": 1,
+      "title": "json-server-change",
+      "author": "typicode"
+    },
+    {
+      "title": "moon",
+      "author": "maoli",
+      "id": 2
+    },
+    {
+      "title": "moon",
+      "author": "maoli",
+      "id": 3
+    }
+  ],
+  "comments": [
+    {
+      "id": 1,
+      "body": "some comment",
+      "postId": 1
+    }
+  ],
+  "profile": {
+    "name": "typicode"
+  }
+}
