@@ -87,7 +87,7 @@ function SideMenu(props) {
   };
   useEffect(()=>{
     axios.get('http://localhost:8000/rights?_embed=children').then(res=>{
-      // console.log('res.data', res.data);
+      console.log('res.data', res.data);
       // console.log('MakemenuTree(res.data)', MakemenuTree(res.data));
       setItems(MakemenuTree(res.data))
     })
