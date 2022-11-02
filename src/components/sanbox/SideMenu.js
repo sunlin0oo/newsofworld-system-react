@@ -53,9 +53,13 @@ const { Sider } = Layout;
 //     getItem('Submenu', 'sub6', null, [getItem('Option 11', '11'), getItem('Option 12', '12')]),
 //   ]),
 // ];
+// 权限判断
+const checkPagePermission = (item) => {
+  return item.pagepermisson === 1
+}
 // 创建树结构
-const MakemenuTree = (menuList)=>{
-  const IconMap = [<PieChartOutlined />, 
+const MakemenuTree = (menuList) => {
+  const IconMap = [<PieChartOutlined />,
   <VideoCameraOutlined />,
   <AppstoreOutlined />,
   <ContainerOutlined />,
@@ -63,35 +67,39 @@ const MakemenuTree = (menuList)=>{
   <MailOutlined />,]
   const tree = [];
   // eslint-disable-next-line array-callback-return
-  menuList.map((item,index) => {
-    const note = {
-      key:item.key,
-      icon:IconMap[index],
-      label:item.title
+  menuList.map((item, index) => {
+    // 权限设置
+    if (checkPagePermission(item)) {
+      const note = {
+        key: item.key,
+        icon: IconMap[index],
+        label: item.title
+      }
+
+      if (item.children && checkPagePermission(item)) {
+        note.children = MakemenuTree(item.children)// 重新调用函数 创建一个子树进行使用
+      }
+      tree.push(note);
     }
-    
-    if(item.children){
-      note.children = MakemenuTree(item.children)// 重新调用函数 创建一个子树进行使用
-    }
-    tree.push(note);
+
   })
   return tree;
 }
 
 function SideMenu(props) {
-  const [items,setItems] = useState(null);
-  const [menu,setMenu] = useState(null);
+  const [items, setItems] = useState(null);
+  const [menu, setMenu] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
-  useEffect(()=>{
-    axios.get('http://localhost:8000/rights?_embed=children').then(res=>{
+  useEffect(() => {
+    axios.get('http://localhost:8000/rights?_embed=children').then(res => {
       console.log('res.data', res.data);
       // console.log('MakemenuTree(res.data)', MakemenuTree(res.data));
       setItems(MakemenuTree(res.data))
     })
-  },[])
+  }, [])
 
   function click(e) {
     // console.log('e', e);
