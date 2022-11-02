@@ -73,7 +73,6 @@ const MakemenuTree = (menuList)=>{
     if(item.children){
       note.children = MakemenuTree(item.children)// 重新调用函数 创建一个子树进行使用
     }
-    console.log('tree', tree);
     tree.push(note);
   })
   return tree;
@@ -88,15 +87,15 @@ function SideMenu(props) {
   };
   useEffect(()=>{
     axios.get('http://localhost:8000/rights?_embed=children').then(res=>{
-      console.log('res.data', res.data);
-      console.log('MakemenuTree(res.data)', MakemenuTree(res.data));
+      // console.log('res.data', res.data);
+      // console.log('MakemenuTree(res.data)', MakemenuTree(res.data));
       setItems(MakemenuTree(res.data))
     })
   },[])
 
   function click(e) {
-    console.log('e', e);
-    console.log('props', props);
+    // console.log('e', e);
+    // console.log('props', props);
     //注意this指向问题，采用箭头函数this就指向当前组件
     props.history.push(e.key);
   }
