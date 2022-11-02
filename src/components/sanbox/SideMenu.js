@@ -56,15 +56,18 @@ const { Sider } = Layout;
 // 权限判断
 const checkPagePermission = (item) => {
   return item.pagepermisson === 1
-}
+} 
+// 图标映射表
+const IconMap = {
+  '/home':<PieChartOutlined />,
+  '/user-manage': <VideoCameraOutlined />,
+  '/right-manage':<AppstoreOutlined />,
+  '/news-manage':<ContainerOutlined />,
+  '/audit-manage':<DesktopOutlined />,
+  '/publish-manage':<MailOutlined />,}
 // 创建树结构
 const MakemenuTree = (menuList) => {
-  const IconMap = [<PieChartOutlined />,
-  <VideoCameraOutlined />,
-  <AppstoreOutlined />,
-  <ContainerOutlined />,
-  <DesktopOutlined />,
-  <MailOutlined />,]
+
   const tree = [];
   // eslint-disable-next-line array-callback-return
   menuList.map((item, index) => {
@@ -72,7 +75,7 @@ const MakemenuTree = (menuList) => {
     if (checkPagePermission(item)) {
       const note = {
         key: item.key,
-        icon: IconMap[index],
+        icon: IconMap[item.key],
         label: item.title
       }
 
