@@ -78,25 +78,23 @@ const MakemenuTree = (menuList) => {
         icon: IconMap[item.key],
         label: item.title
       }
-
-      if (item.children && checkPagePermission(item)) {
+      if (item.children && item.children.length !==0 &&checkPagePermission(item)) {
         note.children = MakemenuTree(item.children)// 重新调用函数 创建一个子树进行使用
       }
       tree.push(note);
     }
-
   })
   return tree;
 }
 
 function SideMenu(props) {
   const [items, setItems] = useState(null);
-  const [menu, setMenu] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };
   useEffect(() => {
+    // _embed=comments(数组名字)==>进行表关联的功能==>向下关联
     axios.get('http://localhost:8000/rights?_embed=children').then(res => {
       console.log('res.data', res.data);
       // console.log('MakemenuTree(res.data)', MakemenuTree(res.data));
@@ -113,7 +111,6 @@ function SideMenu(props) {
   function openChange() {
     console.log('OpenChange');
   }
-
   return (
     // 不知道的去看文档
     <Sider trigger={null} collapsible collapsed={collapsed} reverseArrow={true} >
