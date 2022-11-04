@@ -67,7 +67,6 @@ const IconMap = {
   '/publish-manage':<MailOutlined />,}
 // 创建树结构
 const MakemenuTree = (menuList) => {
-
   const tree = [];
   // eslint-disable-next-line array-callback-return
   menuList.map((item, index) => {

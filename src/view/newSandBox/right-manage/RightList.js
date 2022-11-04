@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Table, Tag, Button, Modal } from 'antd'
+import { Table, Tag, Button, Modal, Popover, Switch } from 'antd'
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import axios from 'axios';
 const { confirm } = Modal;
@@ -42,12 +42,39 @@ export default function RightList() {
       // 什么都不写的话会直接获取到这一项
       render: (item) => {
         return <div>
-          <Button type='primary' shape="circle" icon={<EditOutlined />} />
+          <Popover
+            content={<div style={{ textAlign: 'center' }}>
+              {/* 根据后端控制权限 */}
+              <Switch checked={item.pagepermisson} onChange={() => switchMethod(item)}></Switch>
+            </div>}
+            title="页面配置项"
+            trigger={item.pagepermisson === undefined ? "null" : "click"}
+          // onOpenChange={handleOpenChange}
+          >
+            {/*  */}
+            <Button type='primary' shape="circle" icon={<EditOutlined />} disabled={item.pagepermisson === undefined} />
+          </Popover>
           <Button danger shape="circle" size={'large'} icon={<DeleteOutlined />} onClick={() => delConfirm(item)} />
         </div>
       }
     },
   ];
+  const switchMethod = (item) => {
+    // 存在引用关系，则会一直受影响
+    item.pagepermisson = item.pagepermisson === 1 ? 0 : 1;
+    // console.log(ite)
+    // 强制更新
+    setDataSource([...dataSource]);
+    if ((item.grade === 1)) {
+      axios.patch(`http://localhost:8000/rights/${item.id}`, {
+        pagepermisson: item.pagepermisson,
+      })
+    } else {
+      axios.patch(`http://localhost:8000/children/${item.id}`, {
+        pagepermisson: item.pagepermisson,
+      })
+    }
+  }
   // 确认删除框==>对话框
   const delConfirm = (item) => {
     confirm({
@@ -75,9 +102,9 @@ export default function RightList() {
       axios.delete(`http://localhost:8000/rights/${item.id}`)
     } else {
       // 思考新的实现方法！！！
-      let list = dataSource.filter(data=>data.id === item.rightId)// 去上级找到要删除的项,拿到的是父级的字段(一级菜单信息)
+      let list = dataSource.filter(data => data.id === item.rightId)// 去上级找到要删除的项,拿到的是父级的字段(一级菜单信息)
       console.log(list);
-      list[0].children = list[0].children.filter(data=>data.id !== item.id)// 去替换二级菜单，过滤掉不要的，过滤出要的
+      list[0].children = list[0].children.filter(data => data.id !== item.id)// 去替换二级菜单，过滤掉不要的，过滤出要的
       // 这样的操作也会影响到dataSource，因为不是深复制，会导致改变
       setDataSource([...dataSource]);
       axios.delete(`http://localhost:8000/children/${item.id}`)
