@@ -126,8 +126,9 @@ function SideMenu(props) {
           {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
         </Button>
         <Menu
-          defaultSelectedKeys={['/home']}
-          defaultOpenKeys={['/home']}
+        // 这里存在一个问题，每次刷新如何让页面指定到之前选中的路由中，这里会设置默认的路由
+          defaultSelectedKeys={['']}
+          defaultOpenKeys={['']}
           mode="inline"
           theme="dark"
           items={items}
