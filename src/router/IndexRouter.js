@@ -1,7 +1,7 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Login from '../view/login/Login'
-import NewsSandBox from '../view/newSandBox/user-manage/NewsSandBox'
+import NewsSandBox from '../view/newSandBox/NewsSandBox'
 import Redirect from '../components/Redirect';
 import Home from '../view/newSandBox/home/Home'
 import UserList from '../view/newSandBox/user-manage/UserList'

@@ -1,8 +1,8 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 //components
-import SideMenu from '../../../components/sanbox/SideMenu'
-import TopHeader from '../../../components/sanbox/TopHeader'
+import SideMenu from '../../components/sanbox/SideMenu'
+import TopHeader from '../../components/sanbox/TopHeader'
 // antd
 import { Layout } from 'antd';
 // css
