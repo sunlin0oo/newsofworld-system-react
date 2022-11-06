@@ -42,7 +42,7 @@ export default function Home() {
     //   console.log(res.data)
     // })
 
-    // _expand 向上关联
+    // _expand 向上关联==>将关联的内容跟放入到json中
     axios.get('http://localhost:8000/comments?_expand=post').then(res=>{
       console.log(res.data)
     })
