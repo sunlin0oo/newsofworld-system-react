@@ -12,7 +12,7 @@
     {
       "username": "钢蛋",
       "password": "123",
-      "roleState": false,
+      "roleState": true,
       "default": false,
       "region": "亚洲",
       "roleId": 2,
