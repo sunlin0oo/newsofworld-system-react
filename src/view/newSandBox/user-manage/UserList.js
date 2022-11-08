@@ -20,10 +20,10 @@ export default function UserList() {
   const [isUpdateDisable, setIsUpdateDisable] = useState(false)
   // 添加用户信息更新状态
   const [isUpdateVisible, setIsUpdateVisible] = useState(false);
-  // 获得区域信息状态
-  const [roleList, setRoleList] = useState(false);
   // 获得权限状态信息
-  const [reigonList, setReigonList] = useState(false);
+  const [roleList, setRoleList] = useState(false);
+  // 获得区域信息状态
+  const [reigonList, setReigonList] = useState([]);
   // 获取当前选中的表单
   const [currentItem, setCurrentItem] = useState(null);
   // 连表关注users--role
@@ -58,6 +58,7 @@ export default function UserList() {
       setReigonList(list);
     })
   }, [])
+
   const columns = [
     {
       title: '区域',
@@ -128,6 +129,7 @@ export default function UserList() {
       }
     },
   ];
+
   // 更新函数===>应该需要再去调一下接口===>实时更新item才可以，问题待处理
   function handleUpdate(item) {
     // console.log(item);
