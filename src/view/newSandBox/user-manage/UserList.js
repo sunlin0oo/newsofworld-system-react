@@ -17,23 +17,43 @@ export default function UserList() {
   // 添加用户弹窗状态
   const [IsAddVisible, setIsAddVisible] = useState(false);
   // 禁止更新状态
-  const [isUpdateDisable, setIsUpdateDisable] = useState(false)
+  const [isUpdateDisable, setIsUpdateDisable] = useState(false); //这里的作用是什么
   // 添加用户信息更新状态
-  const [isUpdateVisible, setIsUpdateVisible] = useState(false);
+  const [isUpdateVisible, setIsUpdateVisible] = useState(false); //这里的作用是什么
   // 获得权限状态信息
   const [roleList, setRoleList] = useState(false);
   // 获得区域信息状态
   const [reigonList, setReigonList] = useState([]);
   // 获取当前选中的表单
   const [currentItem, setCurrentItem] = useState(null);
-  // 连表关注users--role
+  /** 
+   * 对身份权限能够看的信息进行过滤和限制
+   * 能够看到自己的信息以及自己下级和自己区域的信息*/
+  const { roleId, region, username } = JSON.parse(localStorage.getItem('token'));
+  // 权限对象
+  const [roleObj] = useState({
+    '1': 'superadmin',
+    '2': 'admin',
+    '3': 'editor'
+  });
+
+  // 连表关注users--role==>过滤权限信息
   useEffect(() => {
     axios.get('http://localhost:8000/users?_expand=role').then(res => {
       console.log('UserList-res.data', res.data)
       const list = res.data;
-      setDataSource(list);
+      setDataSource(
+        // 如果是超级管理员则返回所有的列表
+        roleObj[roleId] === 'superadmin' ? list : [
+          // 过滤出自己
+          ...list.filter(item => item.username === username),
+          // 过滤出自己区域及权限小于自己的
+          ...list.filter(item => item.region === region && item.roleId > roleId)
+        ]
+      );
     })
-  }, [])
+  }, [region, roleId, roleObj, username])
+
   // 获取权限
   useEffect(() => {
     axios.get('http://localhost:8000/roles').then(res => {
@@ -50,6 +70,7 @@ export default function UserList() {
       setRoleList(list);
     })
   }, [])
+
   // 获取区域信息
   useEffect(() => {
     axios.get('http://localhost:8000/regions').then(res => {
@@ -63,20 +84,20 @@ export default function UserList() {
     {
       title: '区域',
       dataIndex: 'region',
-      filters:[
-        ...reigonList.map(item=>({
-          text:item.title,
-          value:item.value
+      filters: [
+        ...reigonList.map(item => ({
+          text: item.title,
+          value: item.value
         })),
         {
-          text:'全球',
-          value:'全球'
+          text: '全球',
+          value: '全球'
         }
       ],
-      onFilter:(value,item)=>{
-        if(value === '全球'){
+      onFilter: (value, item) => {
+        if (value === '全球') {
           return item.region === ''
-        }else{
+        } else {
           return item.region === value
         }
       },
@@ -130,21 +151,31 @@ export default function UserList() {
     },
   ];
 
-  // 更新函数===>应该需要再去调一下接口===>实时更新item才可以，问题待处理
+  const roleFilter = () => {
+    if (roleId !== 1) {
+      const newreigonList = [...reigonList.filter(item => item.title === region)]
+      const newroleList = [...roleList.filter(item => item.id >= roleId)]
+      setReigonList(newreigonList);
+      setRoleList(newroleList);
+    }
+  }
+
+  // 编辑信息函数===>应该需要再去调一下接口===>实时更新item才可以，问题待处理
   function handleUpdate(item) {
-    // console.log(item);
+    // console.log('点击编辑item', item);
     // item获取到点击对应标签值
     setIsUpdateVisible(true);//异步
     setTimeout(() => {
       setCurrentItem(item);
       // 为什么加在这里就可以使用而加在外面就不可以使用????  异步的问题
+      // 这里是为了处理一个问题==>去写清楚是为了解决一个bug所以进行这样的设置
       if (item.roleId === 1) {
         // 禁用
         setIsUpdateDisable(true);
-        console.log('item.roleId', isUpdateDisable)
+        // console.log('item.roleId', isUpdateDisable)
       } else {
         setIsUpdateDisable(false);
-        console.log('Not-item.roleId', isUpdateDisable)
+        // console.log('Not-item.roleId', isUpdateDisable)
       }
       // 获取到表单所有内容
       // 要注意状态的更新不保证是同步的，当设置为true时，状态没有更新完，表单也没有创建完毕，组件也没生成，故会报错
@@ -152,10 +183,40 @@ export default function UserList() {
         ...item,// 拆解
         roleName: item.role.roleName
       });
+      // 处理其权限不可以更改成别的区域，只有超级管理员能够修改区域的权限
+      roleFilter()
     }, 0)
 
   }
-
+  // 修改信息成功函数
+  const updateFormOk = () => {
+    // 可以收集到子组件传来的表单信息
+    updateForm.current.validateFields().then(value => {
+      console.log('value', value);
+      const currentList = roleList.filter(item => item.title === value.roleName)[0];
+      setIsUpdateVisible(false);
+      // 这里res是你表单的格式，要注意表单格式匹配后端格式
+      setDataSource(dataSource.map(item => {
+        // 从dataSource中找到与当前表单同步的id
+        if (item.id === currentItem.id) {
+          return {
+            ...item,
+            ...value,
+            role: currentList
+          }
+        }
+        return item
+      }))
+      // 存在问题:当修改完之后，超级管理员，你仍然是可以选择你的所属区域
+      axios.patch(`http://localhost:8000/users/${currentItem.id}`, {
+        'password': value.password,
+        'region': value.region,
+        'roleId': currentList.id,
+        'username': value.username,
+      });
+    })
+  }
+  // 用户状态的更新
   const handleChange = (item) => {
     // console.log('item', item);
     item.roleState = !item.roleState
@@ -181,7 +242,7 @@ export default function UserList() {
       },
     });
   }
-
+  // 删除信息方法
   const deleteMethod = (item) => {
     console.log(item);
     // 当前页面同步状态 + 后端同步
@@ -192,7 +253,14 @@ export default function UserList() {
     // 在处理后端
     axios.delete(`http://localhost:8000/users/${item.id}`);
   }
+  // 添加信息函数
+  function handleAdd() {
+    setIsAddVisible(true)
+    // 过滤出仅自己使用的权限列表
+    roleFilter()
+  }
 
+  // 添加信息成功函数
   const addFormOk = () => {
     // 可以收集到子组件传来的表单信息
     addForm.current.validateFields().then(res => {
@@ -223,38 +291,9 @@ export default function UserList() {
     })
   }
 
-  const updateFormOk = () => {
-    // 可以收集到子组件传来的表单信息
-    updateForm.current.validateFields().then(value => {
-      console.log('value', value);
-      const currentList = roleList.filter(item => item.title === value.roleName)[0];
-      setIsUpdateVisible(false);
-      // 这里res是你表单的格式，要注意表单格式匹配后端格式
-      setDataSource(dataSource.map(item => {
-        // 从dataSource中找到与当前表单同步的id
-        if (item.id === currentItem.id) {
-          return {
-            ...item,
-            ...value,
-            role: currentList
-          }
-        }
-        return item
-      }))
-      // 存在问题:当修改完之后，超级管理员，你仍然是可以选择你的所属区域
-      axios.patch(`http://localhost:8000/users/${currentItem.id}`, {
-        'password':value.password,
-        'region':value.region,
-        'roleId':currentList.id,
-        'username':value.password,
-      });
-    })
-
-  }
-
   return (
     <div>
-      <Button onClick={() => setIsAddVisible(true)}>添加用户</Button>
+      <Button onClick={() => handleAdd()}>添加用户</Button>
       <Table dataSource={dataSource} columns={columns} pagination={{ pageSize: 5 }}
         // 之前的路由管理是因为字段中带有key，在字段没有key的情况下要进行自我设置
         rowKey={(item) => item.id}></Table>
