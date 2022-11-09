@@ -67,7 +67,7 @@ function TopHeader(props) {
           <MenuFoldOutlined onClick={() => changeCollapsed()}></MenuFoldOutlined>
       }
       <div style={{ float: 'right' }}>
-        <span>欢迎{username}回来</span>
+        <span>欢迎<span style={{color:'#1890ff'}}>{username}</span>回来</span>
         <Dropdown overlay={menu}>
           <a onClick={e => e.preventDefault()}>
             <Space>
