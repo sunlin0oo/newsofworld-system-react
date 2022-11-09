@@ -18,8 +18,8 @@ export default function IndexRouter() {
                 <Route path='user-manage/list' element={<UserList></UserList>}></Route>
                 <Route path='right-manage/role/list' element={<RoleList></RoleList>}></Route>
                 <Route path='right-manage/right/list' element={<RightList></RightList>}></Route>
+                <Route path='*' element={<NotFound></NotFound>}></Route>
             </Route>
-            <Route path='*' element={<NotFound></NotFound>}></Route>
         </Routes>
     )
 }
