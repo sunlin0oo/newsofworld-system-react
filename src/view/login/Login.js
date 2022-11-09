@@ -1,9 +1,10 @@
+/* eslint-disable no-unused-vars */
 import React, { useCallback } from 'react'
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, message } from 'antd';
 import './login.css'
-import Particles from "react-tsparticles";
-import { loadFull } from "tsparticles";
+// import Particles from "react-tsparticles";
+// import { loadFull } from "tsparticles";
 import ReactCanvasNest from 'react-canvas-nest'
 import axios from 'axios';
 import WithRputer from '../../components/WithRouter'
@@ -229,17 +230,17 @@ function Login(props) {
               placeholder="Password"
             />
           </Form.Item>
-          <Form.Item>
+          {/* <Form.Item>
             <a className="login-form-forgot" href="">
               Forgot password
             </a>
-          </Form.Item>
+          </Form.Item> */}
 
           <Form.Item>
             <Button type="primary" htmlType="submit" className="login-form-button">
               Log in
             </Button>
-            Or <a href="">register now!</a>
+            {/* Or <a href="">register now!</a> */}
           </Form.Item>
         </Form>
       </div>
