@@ -17,7 +17,7 @@ export default function RoleList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   // 存储权限信息
   useEffect(() => {
-    axios.get('http://localhost:8000/roles').then(res => {
+    axios.get('/roles').then(res => {
       console.log('Role-res.data', res.data)
       const list = res.data;
       setDataSource(list);
@@ -87,7 +87,7 @@ export default function RoleList() {
     // 首先处理页面状态同步
     setDataSource(dataSource.filter(data => data.id !== item.id));// 过滤出与删除的id不相同的数据
     // 在处理后端
-    axios.delete(`http://localhost:8000/roles/${item.id}`)
+    axios.delete(`/roles/${item.id}`)
   }
   // ---------- END ----------
   //---------- 控制气泡框 ----------
@@ -104,7 +104,7 @@ export default function RoleList() {
       }
       return item;
     }))
-        axios.patch(`http://localhost:8000/roles/${currentId}`, {
+        axios.patch(`/roles/${currentId}`, {
           rights: currentRights,
       })
   };
@@ -116,7 +116,7 @@ export default function RoleList() {
   // 存储树形结构 根据文档给予的格式，处理字段
   useEffect(() => {
     // _embed=comments(数组名字)==>进行表关联的功能==>向下关联
-    axios.get('http://localhost:8000/rights?_embed=children').then(res => {
+    axios.get('/rights?_embed=children').then(res => {
       console.log('res.data', res.data);
       // console.log('MakemenuTree(res.data)', MakemenuTree(res.data));
       setRightList(res.data);

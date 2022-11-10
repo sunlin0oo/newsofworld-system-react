@@ -7,7 +7,7 @@ export default function RightList() {
   const [dataSource, setDataSource] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:8000/rights?_embed=children').then(res => {
+    axios.get('/rights?_embed=children').then(res => {
       console.log(res.data);
       const list = res.data;
       list.forEach(item => {
@@ -66,11 +66,11 @@ export default function RightList() {
     // 强制更新
     setDataSource([...dataSource]);
     if ((item.grade === 1)) {
-      axios.patch(`http://localhost:8000/rights/${item.id}`, {
+      axios.patch(`/rights/${item.id}`, {
         pagepermisson: item.pagepermisson,
       })
     } else {
-      axios.patch(`http://localhost:8000/children/${item.id}`, {
+      axios.patch(`/children/${item.id}`, {
         pagepermisson: item.pagepermisson,
       })
     }
@@ -99,7 +99,7 @@ export default function RightList() {
       // 首先处理页面状态同步
       setDataSource(dataSource.filter(data => data.id !== item.id));// 过滤出与删除的id不相同的数据
       // 在处理后端
-      axios.delete(`http://localhost:8000/rights/${item.id}`)
+      axios.delete(`/rights/${item.id}`)
     } else {
       // 思考新的实现方法！！！
       let list = dataSource.filter(data => data.id === item.rightId)// 去上级找到要删除的项,拿到的是父级的字段(一级菜单信息)
@@ -107,7 +107,7 @@ export default function RightList() {
       list[0].children = list[0].children.filter(data => data.id !== item.id)// 去替换二级菜单，过滤掉不要的，过滤出要的
       // 这样的操作也会影响到dataSource，因为不是深复制，会导致改变
       setDataSource([...dataSource]);
-      axios.delete(`http://localhost:8000/children/${item.id}`)
+      axios.delete(`/children/${item.id}`)
     }
 
   }

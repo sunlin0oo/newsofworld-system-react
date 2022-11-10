@@ -39,7 +39,7 @@ export default function UserList() {
 
   // 连表关注users--role==>过滤权限信息
   useEffect(() => {
-    axios.get('http://localhost:8000/users?_expand=role').then(res => {
+    axios.get('/users?_expand=role').then(res => {
       console.log('UserList-res.data', res.data)
       const list = res.data;
       setDataSource(
@@ -56,7 +56,7 @@ export default function UserList() {
 
   // 获取权限
   useEffect(() => {
-    axios.get('http://localhost:8000/roles').then(res => {
+    axios.get('/roles').then(res => {
       console.log('setRoleList-res.data', res.data)
       const list = [];
       // 修改数据目的:迎合options中的数据结构
@@ -73,7 +73,7 @@ export default function UserList() {
 
   // 获取区域信息
   useEffect(() => {
-    axios.get('http://localhost:8000/regions').then(res => {
+    axios.get('/regions').then(res => {
       console.log('setReigonList-res.data', res.data)
       const list = res.data;
       setReigonList(list);
@@ -208,7 +208,7 @@ export default function UserList() {
         return item
       }))
       // 存在问题:当修改完之后，超级管理员，你仍然是可以选择你的所属区域
-      axios.patch(`http://localhost:8000/users/${currentItem.id}`, {
+      axios.patch(`/users/${currentItem.id}`, {
         'password': value.password,
         'region': value.region,
         'roleId': currentList.id,
@@ -223,7 +223,7 @@ export default function UserList() {
     // 在这里已经更新，但是在页面中还是旧值
     // 强制更新
     setDataSource([...dataSource]);
-    axios.patch(`http://localhost:8000/users/${item.id}`, {
+    axios.patch(`/users/${item.id}`, {
       roleState: item.roleState
     })
   }
@@ -251,7 +251,7 @@ export default function UserList() {
     // 首先处理页面状态同步
     setDataSource(dataSource.filter(data => data.id !== item.id));// 过滤出与删除的id不相同的数据
     // 在处理后端
-    axios.delete(`http://localhost:8000/users/${item.id}`);
+    axios.delete(`/users/${item.id}`);
   }
   // 添加信息函数
   function handleAdd() {
@@ -271,7 +271,7 @@ export default function UserList() {
       const currentList = roleList.filter(item => item.title === res.roleName)[0];
       // post到后端，生成id，再设置datasource，方便后面 的删除和更新处理(因为id不会自动生成,需要放在后端进行生成)
       // 这里res是你表单的格式，要注意表单格式匹配后端格式
-      axios.post('http://localhost:8000/users', {
+      axios.post('/users', {
         ...res,
         'roleState': true,
         'default': false,
