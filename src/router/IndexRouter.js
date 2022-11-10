@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import React, { useEffect, useState } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Login from '../view/login/Login'
@@ -38,22 +39,38 @@ export default function IndexRouter() {
     useEffect(() => {
         // promise.all()成功时，在then（result）中result是个数组
         Promise.all([
-            axios.get(`http://localhost:8000/rights`),
-            axios.get(`http://localhost:8000/children`),
+            axios.get(`/rights`),
+            axios.get(`/children`),
         ]).then(res => {
             console.log(res);
             // 将所有的权限放在一块，扁平化处理
             setBackRouteList([...res[0].data, ...res[1].data])
         })
     }, [])
+    const { role:{rights} } = JSON.parse(localStorage.getItem('token'));
+
+    const checkRoute = (item) =>{
+        // 判断送进来路由是否有对应组件存在 且 路由是打开状态  才可以进行访问
+        return LocalRouterMap[item.key] && item.pagepermisson
+    }
+
+    const checkUserPermission = (item) =>{
+        // 判断用户权限是否包含此路由;若包含则可以渲染路由
+        return rights.includes(item.key)
+    }
     return (
         <Routes>
             <Route path='/login' element={<Login />}></Route>
             <Route path='/' element={<AuthComponent>{<NewsSandBox />}</AuthComponent>}>
                 {/* 动态创建路由 */}
                 {
-                    backrouteList.map(item =>
-                        <Route path={item.key} key={item.key} element={LocalRouterMap[item.key]}></Route>)
+                    backrouteList.map(item => {
+                        if(checkRoute(item) && checkUserPermission(item)){
+                            return <Route path={item.key} key={item.key} element={LocalRouterMap[item.key]}></Route>
+                        }
+                        return null
+                    }
+                    )
                 }
                 {/* <Route path='home' element={<Home></Home>}></Route>
                 <Route path='user-manage/list' element={<UserList></UserList>}></Route>
@@ -62,7 +79,7 @@ export default function IndexRouter() {
                 <Route path='' element={<Redirect to='/home'></Redirect>}></Route>
                 {
                     // 解决数据没有传输过来导致路由无法渲染的问题(会短暂的存在Notfound的图标)
-                    backrouteList.length>0 && <Route path='*' element={<NotFound></NotFound>}></Route>
+                    backrouteList.length > 0 && <Route path='*' element={<NotFound></NotFound>}></Route>
                 }
             </Route>
         </Routes>
