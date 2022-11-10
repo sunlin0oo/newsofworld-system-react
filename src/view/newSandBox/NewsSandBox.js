@@ -23,7 +23,7 @@ export default function NewsSandBox() {
             overflow:'auto'
           }}
         >
-          {/* 孩子222222222222 */}
+          {/* 孩子*/}
           <Outlet></Outlet>
         </Content>
       </Layout>
