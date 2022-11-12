@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { PageHeader, Steps, Button, message, Form, Input, Select } from 'antd';
+import NewsEditor from '../../../components/news-manage/NewsEditor'
 import axios from 'axios';
 import './css/NewsAdd.css'
 const { Step } = Steps
@@ -92,7 +93,9 @@ export default function NewsAdd() {
         </Form>
       </div>
       <div className={current === 1 ? '' : 'active'}>
-
+              <NewsEditor getContent={(value)=>{
+                console.log(value);
+              }}></NewsEditor>
       </div>
       <div className={current === 2 ? '' : 'active'}>
 
