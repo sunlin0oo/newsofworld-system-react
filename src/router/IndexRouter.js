@@ -62,11 +62,11 @@ export default function IndexRouter() {
         <Routes>
             <Route path='/login' element={<Login />}></Route>
             <Route path='/' element={<AuthComponent>{<NewsSandBox />}</AuthComponent>}>
-                {/* 动态创建路由 */}
+                {/* 动态创建路由==>路由的创建有问题 */}
                 {
                     backrouteList.map(item => {
                         if(checkRoute(item) && checkUserPermission(item)){
-                            return <Route path={item.key} key={item.key} element={LocalRouterMap[item.key]}></Route>
+                            return <Route path={item.key.slice(1)} key={item.key.slice(1)} element={LocalRouterMap[item.key]}></Route>
                         }
                         return null
                     }
