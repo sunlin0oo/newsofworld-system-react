@@ -103,7 +103,7 @@ function SideMenu(props) {
   useEffect(() => {
     // _embed=comments(数组名字)==>进行表关联的功能==>向下关联
     axios.get('/rights?_embed=children').then(res => {
-      console.log('res.data', res.data);
+      // console.log('SideMenu-res.data', res.data);
       // console.log('MakemenuTree(res.data)', MakemenuTree(res.data));
       setItems(MakemenuTree(res.data))
     })
