@@ -19,6 +19,7 @@ import Unpublished from '../view/newSandBox/publish-manage/Unpublished'
 import Published from '../view/newSandBox/publish-manage/Published'
 import Sunset from '../view/newSandBox/publish-manage/Sunset'
 import axios from 'axios';
+import NewsUpdate from '../view/newSandBox/news-manage/NewsUpdate';
 
 // 路由哈希表
 const LocalRouterMap = {
@@ -30,6 +31,7 @@ const LocalRouterMap = {
     "/news-manage/draft": <NewsDraft />,
     "/news-manage/category": <NewsCategory />,
     '/news-manage/preview/:id':<NewsPreview />,
+    '/news-manage/update/:id':<NewsUpdate />,
     "/audit-manage/audit": <Audit />,
     "/audit-manage/list": <AuditList />,
     "/publish-manage/unpublished": <Unpublished />,
@@ -44,7 +46,7 @@ export default function IndexRouter() {
             axios.get(`/rights`),
             axios.get(`/children`),
         ]).then(res => {
-            console.log(res);
+            // console.log(res);
             // 将所有的权限放在一块，扁平化处理
             setBackRouteList([...res[0].data, ...res[1].data])
         })
