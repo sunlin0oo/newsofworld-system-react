@@ -145,7 +145,9 @@ function NewsAdd(props) {
                 {/* 提交按钮 */}
                 {current === 2 && (
                     <>
+                    {/* 若是保存到草稿箱则auditState === 0 是未审核的状态 */}
                         <Button style={{ margin: '5px' }} type="primary" onClick={() => handleSave(0)}>保存草稿箱</Button>
+                    {/* 若是保存到草稿箱则auditState === 1 是审核中的状态 */}
                         <Button danger onClick={() => handleSave(1)}>提交审核</Button>
                     </>
                 )}
