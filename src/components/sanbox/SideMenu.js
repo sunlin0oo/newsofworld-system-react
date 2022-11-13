@@ -54,48 +54,46 @@ const { Sider } = Layout;
 //   ]),
 // ];
 // 图标映射表
-const IconMap = {
-  '/home': <PieChartOutlined />,
-  '/user-manage': <VideoCameraOutlined />,
-  '/right-manage': <AppstoreOutlined />,
-  '/news-manage': <ContainerOutlined />,
-  '/audit-manage': <DesktopOutlined />,
-  '/publish-manage': <MailOutlined />,
-}
-
-const { role: { rights } } = JSON.parse(localStorage.getItem('token'))
-
-// 权限判断
-const checkPagePermission = (item) => {
-  // item 是所有的侧边栏==>pagepermisson是否有展现权限，rights(当前的登录用户的权限列表).includes(侧边栏的router)==> 当前的登录用户的权限列表是有侧边栏的权限
-  return item.pagepermisson && rights.includes(item.key)
-}
-// 创建树结构
-const MakemenuTree = (menuList) => {
-  const tree = [];
-  // eslint-disable-next-line array-callback-return
-  menuList.map((item, index) => {
-    // 权限设置
-    if (checkPagePermission(item)) {
-      const note = {
-        key: item.key,
-        icon: IconMap[item.key],
-        label: item.title
-      }
-      if (item.children && item.children.length !== 0 && checkPagePermission(item)) {
-        note.children = MakemenuTree(item.children)// 重新调用函数 创建一个子树进行使用
-      }
-      tree.push(note);
-    }
-  })
-  return tree;
-}
-
 
 function SideMenu(props) {
   const [items, setItems] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
-
+  const IconMap = {
+    '/home': <PieChartOutlined />,
+    '/user-manage': <VideoCameraOutlined />,
+    '/right-manage': <AppstoreOutlined />,
+    '/news-manage': <ContainerOutlined />,
+    '/audit-manage': <DesktopOutlined />,
+    '/publish-manage': <MailOutlined />,
+  }
+  
+  const { role: { rights } } = JSON.parse(localStorage.getItem('token'))
+  
+  // 权限判断
+  const checkPagePermission = (item) => {
+    // item 是所有的侧边栏==>pagepermisson是否有展现权限，rights(当前的登录用户的权限列表).includes(侧边栏的router)==> 当前的登录用户的权限列表是有侧边栏的权限
+    return item.pagepermisson && rights.includes(item.key)
+  }
+  // 创建树结构
+  const MakemenuTree = (menuList) => {
+    const tree = [];
+    // eslint-disable-next-line array-callback-return
+    menuList.map((item, index) => {
+      // 权限设置
+      if (checkPagePermission(item)) {
+        const note = {
+          key: item.key,
+          icon: IconMap[item.key],
+          label: item.title
+        }
+        if (item.children && item.children.length !== 0 && checkPagePermission(item)) {
+          note.children = MakemenuTree(item.children)// 重新调用函数 创建一个子树进行使用
+        }
+        tree.push(note);
+      }
+    })
+    return tree;
+  }
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
   };

@@ -4,10 +4,11 @@ import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, VerticalAlignT
 import WithRouter from '../../../components/WithRouter';
 import axios from 'axios';
 const { confirm } = Modal;
-const { username } = JSON.parse(localStorage.getItem('token'));
 function NewsDraft(props) {
-  const [dataSource, setDataSource] = useState([]);
+  const { username } = JSON.parse(localStorage.getItem('token'));
 
+  const [dataSource, setDataSource] = useState([]);
+  // 筛选中未审核的新闻稿件
   useEffect(() => {
     axios.get(`/news?author=${username}&auditState=0&_expand=category`).then(res => {
       console.log(res.data);
@@ -82,7 +83,7 @@ function NewsDraft(props) {
 
   const handleCheck = (id) => {
     axios.patch(`/news/${id}`, {
-      auditState:1
+      auditState:2
     }).then(res => {
       props.history.push('/audit-manage/list')
       notification.info({
