@@ -12,6 +12,7 @@ import NotFound from '../view/nopermission/NotFound'
 import NewsAdd from '../view/newSandBox/news-manage/NewsAdd'
 import NewsDraft from '../view/newSandBox/news-manage/NewsDraft'
 import NewsCategory from '../view/newSandBox/news-manage/NewsCategory'
+import NewsPreview from '../view/newSandBox/news-manage/NewsPreview'
 import Audit from '../view/newSandBox/audit-manage/Audit'
 import AuditList from '../view/newSandBox/audit-manage/AuditList'
 import Unpublished from '../view/newSandBox/publish-manage/Unpublished'
@@ -28,6 +29,7 @@ const LocalRouterMap = {
     "/news-manage/add": <NewsAdd />,
     "/news-manage/draft": <NewsDraft />,
     "/news-manage/category": <NewsCategory />,
+    '/news-manage/preview/:id':<NewsPreview />,
     "/audit-manage/audit": <Audit />,
     "/audit-manage/list": <AuditList />,
     "/publish-manage/unpublished": <Unpublished />,
@@ -50,8 +52,8 @@ export default function IndexRouter() {
     const { role:{rights} } = JSON.parse(localStorage.getItem('token'));
 
     const checkRoute = (item) =>{
-        // 判断送进来路由是否有对应组件存在 且 路由是打开状态  才可以进行访问
-        return LocalRouterMap[item.key] && item.pagepermisson
+        // 判断送进来路由是否有对应组件存在 且 路由是打开状态  才可以进行访问 item.pagepermisson过滤是否有页面的权限  item.routepermisson是否路由权限
+        return LocalRouterMap[item.key] && (item.pagepermisson || item.routepermisson)
     }
 
     const checkUserPermission = (item) =>{
