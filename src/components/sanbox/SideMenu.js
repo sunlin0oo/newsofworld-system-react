@@ -53,11 +53,11 @@ const { Sider } = Layout;
 //     getItem('Submenu', 'sub6', null, [getItem('Option 11', '11'), getItem('Option 12', '12')]),
 //   ]),
 // ];
-// 图标映射表
 
 function SideMenu(props) {
   const [items, setItems] = useState(null);
   const [collapsed, setCollapsed] = useState(false);
+  // 图标映射表
   const IconMap = {
     '/home': <PieChartOutlined />,
     '/user-manage': <VideoCameraOutlined />,
