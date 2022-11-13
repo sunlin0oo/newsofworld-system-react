@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Table, Tag, Button, Modal } from 'antd'
+import { Table, Tag, Button, Modal, notification } from 'antd'
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, VerticalAlignTopOutlined } from '@ant-design/icons';
 import WithRouter from '../../../components/WithRouter';
 import axios from 'axios';
@@ -26,7 +26,7 @@ function NewsDraft(props) {
       title: '新闻标题',
       dataIndex: 'title',
       key: 'title',
-      render:(title,item)=>{
+      render: (title, item) => {
         // 跳转到新闻的详细界面
         return <a href={`#/news-manage/preview/${item.id}`}>{title}</a>
       }
@@ -52,9 +52,9 @@ function NewsDraft(props) {
       // 什么都不写的话会直接获取到这一项
       render: (item) => {
         return <div>
-          <Button type='primary' shape="circle" icon={<EditOutlined />} onClick={()=>props.history.push(`/news-manage/update/${item.id}`)}/>
+          <Button type='primary' shape="circle" icon={<EditOutlined />} onClick={() => props.history.push(`/news-manage/update/${item.id}`)} />
           <Button danger shape="circle" size={'large'} icon={<DeleteOutlined />} onClick={() => delConfirm(item)} />
-          <Button type='primary' shape="circle" size={'large'} icon={<VerticalAlignTopOutlined />} onClick={() => delConfirm(item)} />
+          <Button type='primary' shape="circle" size={'large'} icon={<VerticalAlignTopOutlined />} onClick={() => handleCheck(item.id)} />
         </div>
       }
     },
@@ -79,13 +79,27 @@ function NewsDraft(props) {
     setDataSource(dataSource.filter(data => data.id !== item.id));// 过滤出与删除的id不相同的数据
     axios.delete(`/news/${item.id}`);
   }
+
+  const handleCheck = (id) => {
+    axios.patch(`/news/${id}`, {
+      auditState:1
+    }).then(res => {
+      props.history.push('/audit-manage/list')
+      notification.info({
+        message: `通知`,
+        description:
+          `恭喜您，成功提交审核,您可以到审核列表进行查看`,
+        placement: 'bottomRight',
+      });
+    })
+  }
   return (
     <div>
       <Table dataSource={dataSource} columns={columns}
         pagination={{
           pageSize: 4
-        }} 
-        rowKey={item=>item.id}/>
+        }}
+        rowKey={item => item.id} />
     </div>
   )
 }
