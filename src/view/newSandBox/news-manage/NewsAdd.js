@@ -1,50 +1,75 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { PageHeader, Steps, Button, message, Form, Input, Select } from 'antd';
+import { PageHeader, Steps, Button, message, Form, Input, Select, notification } from 'antd';
 import NewsEditor from '../../../components/news-manage/NewsEditor'
 import axios from 'axios';
+import WithRouter from '../../../components/WithRouter';
 import './css/NewsAdd.css'
 const { Step } = Steps
 const { Option } = Select
-const steps = [
-  {
-    title: '基本信息',
-    content: '新闻标题，新闻分类',
-  },
-  {
-    title: '新闻内容',
-    content: '新闻主题内容',
-  },
-  {
-    title: '新闻提交',
-    content: '保存草稿或者提交审核',
-  },
-];
 
-export default function NewsAdd() {
+const { region, username, roleId } = JSON.parse(localStorage.getItem('token'));
+function NewsAdd(props) {
   const [current, setCurrent] = useState(0);
   const [categories, setCategories] = useState([]);
-  const NewsForm = useRef(null)
+  const [formInfo, setFormInfo] = useState('');
+  const [content, setContent] = useState('');
+  const NewsForm = useRef(null);
+  // 下一步所触发事件
   const next = () => {
-    if(current === 0){
+    if (current === 0) {
       // 表单校验
-      NewsForm.current.validateFields().then(res=>{
-        console.log(res);
+      NewsForm.current.validateFields().then(res => {
+        setFormInfo(res)
         setCurrent(current + 1);
-      }).catch(error=>{
+      }).catch(error => {
         console.log(error)
       })
-    }else{
-      setCurrent(current + 1);
+    } else {
+      // 避免为空跳转下一步
+      // trim去掉首尾空格
+      if (content === '' || content.trim() === '<p></p>') {
+        message.error('输入错误，请重新输入')
+      } else {
+        setCurrent(current + 1);
+      }
     }
   };
+  // 返回上一步
   const prev = () => {
     setCurrent(current - 1);
   };
-  useEffect(()=>{
-    axios.get('/categories').then(res=>{
+  // 获取数据
+  useEffect(() => {
+    axios.get('/categories').then(res => {
       setCategories(res.data)
     })
-  },[])
+  }, []);
+  // 保存表单内容
+  const handleSave = (auditState) => {
+    axios.post(`/news`, {
+      ...formInfo,
+      "content": content,
+      "region": region ? region : '全球',
+      "author": username,
+      "roleId": roleId,
+      // 0 草稿箱 1 审核待审核 2 审核通过 3 审核失败
+      "auditState": auditState,
+      "publishState": 0,
+      "createTime": Date.now(),
+      "star": 0,
+      "view": 0,
+      // "publishTime": 0,
+    }).then(res => {
+      props.history.push(auditState ? '/audit-manage/list' : '/news-manage/draft')
+      notification.info({
+        message: `通知`,
+        description:
+          `恭喜您，成功${auditState ? '提交审核' : '保存草稿箱'},您可以到${auditState ? '审核列表' : '草稿箱'}进行查看`,
+        placement: 'bottomRight',
+      });
+    })
+  }
+
   return (
     <div>
       {/* 页头 */}
@@ -86,33 +111,38 @@ export default function NewsAdd() {
           >
             <Select>
               {
-                categories.map(item=><Option key={item.id} value={item.id}>{item.title}</Option>)
+                categories.map(item => <Option key={item.id} value={item.id}>{item.title}</Option>)
               }
             </Select>
           </Form.Item>
         </Form>
       </div>
       <div className={current === 1 ? '' : 'active'}>
-              <NewsEditor getContent={(value)=>{
-                console.log(value);
-              }}></NewsEditor>
+        {/* 富文本回调函数，获得输入值 */}
+        <NewsEditor getContent={(value) => {
+          // console.log(value);
+          setContent(value);
+        }}></NewsEditor>
       </div>
       <div className={current === 2 ? '' : 'active'}>
 
       </div>
+
       {/* 推进按钮 */}
       <div className="steps-action">
-        {current < steps.length - 1 && (
+        {current < 2 && (
           <Button type="primary" onClick={() => next()}>
             Next
           </Button>
         )}
-        {current === steps.length - 1 && (
-          <><Button style={{ margin: '5px' }} type="primary" onClick={() => message.success('Processing complete!')}>
-            保存草稿箱
-          </Button>
-            <Button danger>提交审核</Button></>
+        {/* 提交按钮 */}
+        {current === 2 && (
+          <>
+            <Button style={{ margin: '5px' }} type="primary" onClick={() => handleSave(0)}>保存草稿箱</Button>
+            <Button danger onClick={() => handleSave(1)}>提交审核</Button>
+          </>
         )}
+        {/* 返回按钮 */}
         {current > 0 && (
           <Button
             style={{
@@ -127,3 +157,4 @@ export default function NewsAdd() {
     </div>
   )
 }
+export default WithRouter(NewsAdd)
