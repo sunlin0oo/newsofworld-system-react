@@ -20,7 +20,7 @@ import Published from '../view/newSandBox/publish-manage/Published'
 import Sunset from '../view/newSandBox/publish-manage/Sunset'
 import axios from 'axios';
 import NewsUpdate from '../view/newSandBox/news-manage/NewsUpdate';
-
+// 路由存在Bug: 路由权限分布不对，同目录下退出及更新账户不会重新更新信息
 // 路由哈希表
 const LocalRouterMap = {
     "/user-manage/list": <UserList />,
