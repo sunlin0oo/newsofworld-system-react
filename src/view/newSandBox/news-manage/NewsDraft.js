@@ -15,7 +15,7 @@ function NewsDraft(props) {
       const list = res.data;
       setDataSource(list);
     })
-  }, [])
+  }, [username])
 
   const columns = [
     {
