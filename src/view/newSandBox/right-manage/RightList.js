@@ -113,6 +113,7 @@ export default function RightList() {
   }
   return (
     <div>
+      {/* 为什么这里不用加rowkey是因为，后端传来的字段，存在key字段，故自动填充上 */}
       <Table dataSource={dataSource} columns={columns}
         pagination={{
           pageSize: 4
