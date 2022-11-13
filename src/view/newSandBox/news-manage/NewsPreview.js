@@ -6,6 +6,7 @@ import { useState } from 'react';
 import moment from 'moment'
 const auditList = ['未审核', '审核中', '已通过', '未通过'];
 const publishList = ['未发布', '待发布', '已上线', '已下线'];
+const colorList = ['black','orange','green','red']
 function NewsPreview(props) {
     const [newsInfo, setNewsInfo] = useState([])
     useEffect(() => {
@@ -29,8 +30,8 @@ function NewsPreview(props) {
                     <Descriptions.Item label="创建时间">{moment(newsInfo.createTime).format('YYYY/MM/DD HH:mm:ss')}</Descriptions.Item>
                     <Descriptions.Item label="发布时间">{newsInfo.publishTime ? moment(newsInfo.publishTime).format('YYYY/MM/DD HH:mm:ss') : '-'}</Descriptions.Item>
                     <Descriptions.Item label="区域">{newsInfo.region === '' ? '全球' : newsInfo.region}</Descriptions.Item>
-                    <Descriptions.Item label="审核状态" contentStyle={{ color: 'red' }}>{auditList[newsInfo.auditState]}</Descriptions.Item>
-                    <Descriptions.Item label="发布状态" contentStyle={{ color: 'red' }}>{publishList[newsInfo.publishState]}</Descriptions.Item>
+                    <Descriptions.Item label="审核状态" contentStyle={{ color: colorList[newsInfo.auditState] }}>{auditList[newsInfo.auditState]}</Descriptions.Item>
+                    <Descriptions.Item label="发布状态" contentStyle={{ color: colorList[newsInfo.auditState] }}>{publishList[newsInfo.publishState]}</Descriptions.Item>
                     <Descriptions.Item label="访问数量">{newsInfo.view}</Descriptions.Item>
                     <Descriptions.Item label="点赞数量">{newsInfo.start}</Descriptions.Item>
                     {/* <Descriptions.Item label="评论数量">{newsInfo}</Descriptions.Item> */}
