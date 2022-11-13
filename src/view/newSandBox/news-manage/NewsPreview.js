@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { Button, Descriptions, PageHeader, Tooltip  } from 'antd';
+import { Descriptions, PageHeader  } from 'antd';
 import WithRouter from '../../../components/WithRouter';
 import axios from 'axios';
 import { useState } from 'react';
