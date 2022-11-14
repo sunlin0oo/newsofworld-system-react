@@ -75,6 +75,7 @@ function SideMenu(props) {
     return item.pagepermisson && rights.includes(item.key)
   }
   // 创建树结构
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const MakemenuTree = (menuList) => {
     const tree = [];
     // eslint-disable-next-line array-callback-return
@@ -105,7 +106,7 @@ function SideMenu(props) {
       // console.log('MakemenuTree(res.data)', MakemenuTree(res.data));
       setItems(MakemenuTree(res.data))
     })
-  }, [])
+  }, [MakemenuTree])
 
   function click(e) {
     // console.log('e', e);
