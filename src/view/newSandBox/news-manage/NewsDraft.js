@@ -11,7 +11,7 @@ function NewsDraft(props) {
   // 筛选中未审核的新闻稿件
   useEffect(() => {
     axios.get(`/news?author=${username}&auditState=0&_expand=category`).then(res => {
-      console.log(res.data);
+      console.log('NewsDraft-res.data', res.data);
       const list = res.data;
       setDataSource(list);
     })

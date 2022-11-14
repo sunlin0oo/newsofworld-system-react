@@ -170,7 +170,7 @@ function Login(props) {
   const onFinish = (values) => {
     console.log('Received values of form: ', values);
     axios.get(`/users?username=${values.username}&password=${values.password}&roleState=true&_expand=role`).then(res=>{
-      console.log(res.data);
+      console.log('Login-res.data', res.data);
       if(res.data.length === 0){
         message.error('用户名或密码错误')
       }else{

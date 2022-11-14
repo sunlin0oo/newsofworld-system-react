@@ -8,7 +8,7 @@ export default function RightList() {
 
   useEffect(() => {
     axios.get('/rights?_embed=children').then(res => {
-      console.log(res.data);
+      console.log('RightList-res.data', res.data);
       const list = res.data;
       list.forEach(item => {
         if (item.children && item.children.length === 0) item.children = null
