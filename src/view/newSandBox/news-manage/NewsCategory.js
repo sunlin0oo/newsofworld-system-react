@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext, useRef } from 'react'
-import { Table, Button, Modal,Form, Input,} from 'antd'
+import { Table, Button, Modal, Form, Input, } from 'antd'
 import { DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import axios from 'axios';
 const { confirm } = Modal;
@@ -13,26 +13,26 @@ export default function NewsCategory() {
       setDataSource(list);
     })
   }, [])
-
-  const handleSave = (record) =>{
+  // 直接进行编辑新闻内容事件
+  const handleSave = (record) => {
     console.log(record);
-    setDataSource(dataSource.map(item=>{
+    setDataSource(dataSource.map(item => {
       // 如果更新的ID 与 遍历的ID一致，则返回新设置的,否则是原先的
-      if(item.id === record.id){
+      if (item.id === record.id) {
         return {
-          id:item.id,
-          title:record.title,
-          value:record.title
+          id: item.id,
+          title: record.title,
+          value: record.title
         }
       }
       return item
     }))
-    axios.patch(`/categories/${record.id}`,{
-      'title':record.title,
-      'value':record.title
+    axios.patch(`/categories/${record.id}`, {
+      'title': record.title,
+      'value': record.title
     })
   }
-
+  // 标题
   const columns = [
     {
       title: 'ID',
@@ -76,13 +76,13 @@ export default function NewsCategory() {
       },
     });
   }
-
+  // 删除方法
   const deleteMethod = (item) => {
-      setDataSource(dataSource.filter(data => data.id !== item.id));// 过滤出与删除的id不相同的数据
-      // 在处理后端
-      axios.delete(`/categories/${item.id}`)
+    setDataSource(dataSource.filter(data => data.id !== item.id));// 过滤出与删除的id不相同的数据
+    // 在处理后端
+    axios.delete(`/categories/${item.id}`)
   }
-
+  // 新闻内容编辑直接编辑方法
   const EditableRow = ({ index, ...props }) => {
     const [form] = Form.useForm();
     return (
@@ -93,6 +93,8 @@ export default function NewsCategory() {
       </Form>
     );
   };
+  // 新闻内容编辑直接编辑方法
+
   const EditableCell = ({
     title,
     editable,
