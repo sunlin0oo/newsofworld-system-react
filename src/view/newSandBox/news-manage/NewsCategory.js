@@ -28,8 +28,8 @@ export default function NewsCategory() {
       return item
     }))
     axios.patch(`/categories/${record.id}`,{
-      title:record.title,
-      value:record.title
+      'title':record.title,
+      'value':record.title
     })
   }
 
