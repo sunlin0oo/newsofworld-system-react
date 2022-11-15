@@ -1,8 +1,11 @@
 import { combineReducers, legacy_createStore as createStore } from "redux";
 import { CollapsedReducer } from "./reducers/CollapsedReducer";
+import { LoadingReducer } from "./reducers/LoadingReducer";
+
 // 将众多reducer进行切片，然后再合并到一个reducer里面进行操作
 const reducer = combineReducers({
-    CollapsedReducer
+    CollapsedReducer,
+    LoadingReducer
 })
 const store = createStore(reducer)
 
