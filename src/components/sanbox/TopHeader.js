@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from 'react'
+import React from 'react'
+import { connect } from 'react-redux';
 import {
   UserOutlined,
   DownOutlined,
@@ -10,8 +11,9 @@ import { Layout, Dropdown, Space, Menu, Avatar } from 'antd';
 import WithRouter from '../WithRouter'
 const { Header } = Layout;
 function TopHeader(props) {
-  const [collapsed, setCollapsed] = useState(false);
-  const {username,role:{roleName}} = JSON.parse(localStorage.getItem('token'))
+  console.log('TopHeader-props', props)
+  // const [collapsed, setCollapsed] = useState(false);
+  const { username, role: { roleName } } = JSON.parse(localStorage.getItem('token'))
   const items = [
     {
       key: '1',
@@ -48,7 +50,9 @@ function TopHeader(props) {
 
 
   const changeCollapsed = () => {
-    setCollapsed(!collapsed)
+    // setCollapsed(!collapsed)
+    // 改变Store中isCollapsed
+    props.changeCollapsed();
   }
   return (
     <Header
@@ -63,11 +67,11 @@ function TopHeader(props) {
     })} */}
       {
         // 头导航栏是否收起
-        collapsed ? <MenuUnfoldOutlined onClick={() => changeCollapsed()}></MenuUnfoldOutlined> :
+        props.isCollapsed ? <MenuUnfoldOutlined onClick={() => changeCollapsed()}></MenuUnfoldOutlined> :
           <MenuFoldOutlined onClick={() => changeCollapsed()}></MenuFoldOutlined>
       }
       <div style={{ float: 'right' }}>
-        <span>欢迎<span style={{color:'#1890ff'}}>{username}</span>回来</span>
+        <span>欢迎<span style={{ color: '#1890ff' }}>{username}</span>回来</span>
         <Dropdown overlay={menu}>
           <a onClick={e => e.preventDefault()}>
             <Space>
@@ -80,5 +84,35 @@ function TopHeader(props) {
     </Header>
   )
 }
+/**
+ * connect(
+ *    mapStateToProps 将redux中的状态映射成属性==>可以自定义属性
+ *    mapDispatchToPros 将dispatch中的方法映射成属性
+ * )(被包装的组件)
+ * eg:
+  const mapStateToProps = () =>{
+    return {
+      a:1
+    }
+}
+// 在TopHeader中会新增一个属性a
+export default connect(mapStateToProps)(WithRouter(TopHeader))
+ */
 
-export default WithRouter(TopHeader)
+const mapStateToProps = ({ CollapsedReducer: { isCollapsed } }) => {
+  // 拿取到CollapsedReducer 中的初始值
+  return {
+    isCollapsed
+  }
+}
+
+const mapDispatchToPros = {
+  // 这就是发送到store中交给reducer==>寻找对应的action中进行处理(action中需要type属性)
+  changeCollapsed(){
+    return {
+      type: 'change_collapsed'
+    }
+  }
+}
+// 在TopHeader中会新增一个属性a
+export default connect(mapStateToProps,mapDispatchToPros)(WithRouter(TopHeader))

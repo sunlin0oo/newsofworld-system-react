@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Layout, Menu, Button } from 'antd';
+import { connect } from 'react-redux';
 import {
   VideoCameraOutlined,
   AppstoreOutlined,
@@ -96,7 +97,8 @@ function SideMenu(props) {
     return tree;
   }
   const toggleCollapsed = () => {
-    setCollapsed(!collapsed);
+    // setCollapsed(!collapsed);
+    props.changeCollapsed();
   };
 
   useEffect(() => {
@@ -119,7 +121,7 @@ function SideMenu(props) {
   }
   return (
     // 不知道的去看文档
-    <Sider trigger={null} collapsible collapsed={collapsed} reverseArrow={true} >
+    <Sider trigger={null} collapsible collapsed={props.isCollapsed} reverseArrow={true} >
       <div className="logo" >全球新闻发布管理系统</div>
       <div style={{ width: '100%' }}>
         {/* 控制缩进侧边栏 */}
@@ -130,7 +132,7 @@ function SideMenu(props) {
             marginBottom: 16,
           }}
         >
-          {collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          {props.isCollapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
         </Button>
         <Menu
           // 这里存在一个问题，每次刷新如何让页面指定到之前选中的路由中，这里会设置默认的路由
@@ -147,4 +149,20 @@ function SideMenu(props) {
   )
 }
 
-export default withRouter(SideMenu)
+const mapStateToProps = ({ CollapsedReducer: { isCollapsed } }) => {
+  // 拿取到CollapsedReducer 中的初始值
+  return {
+    isCollapsed
+  }
+}
+
+const mapDispatchToPros = {
+  // 这就是发送到store中交给reducer==>寻找对应的action中进行处理(action中需要type属性)
+  changeCollapsed(){
+    return {
+      type: 'change_collapsed'
+    }
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToPros)(withRouter(SideMenu))
