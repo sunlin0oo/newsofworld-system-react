@@ -30,8 +30,8 @@ const LocalRouterMap = {
     "/news-manage/add": <NewsAdd />,
     "/news-manage/draft": <NewsDraft />,
     "/news-manage/category": <NewsCategory />,
-    '/news-manage/preview/:id':<NewsPreview />,
-    '/news-manage/update/:id':<NewsUpdate />,
+    '/news-manage/preview/:id': <NewsPreview />,
+    '/news-manage/update/:id': <NewsUpdate />,
     "/audit-manage/audit": <Audit />,
     "/audit-manage/list": <AuditList />,
     "/publish-manage/unpublished": <Unpublished />,
@@ -51,42 +51,42 @@ export default function IndexRouter() {
             setBackRouteList([...res[0].data, ...res[1].data])
         })
     }, [])
-    const { role:{rights} } = JSON.parse(localStorage.getItem('token'));
+    const { role: { rights } } = JSON.parse(localStorage.getItem('token'));
 
-    const checkRoute = (item) =>{
+    const checkRoute = (item) => {
         // 判断送进来路由是否有对应组件存在 且 路由是打开状态  才可以进行访问 item.pagepermisson过滤是否有页面的权限  item.routepermisson是否路由权限
         return LocalRouterMap[item.key] && (item.pagepermisson || item.routepermisson)
     }
 
-    const checkUserPermission = (item) =>{
+    const checkUserPermission = (item) => {
         // 判断用户权限是否包含此路由;若包含则可以渲染路由
         return rights.includes(item.key)
     }
     return (
-        <Routes>
-            <Route path='/login' element={<Login />}></Route>
-            <Route path='/' element={<AuthComponent>{<NewsSandBox />}</AuthComponent>}>
-                {/* 动态创建路由==>路由的创建有问题 */}
-                {
-                    backrouteList.map(item => {
-                        if(checkRoute(item) && checkUserPermission(item)){
-                            return <Route path={item.key.slice(1)} key={item.key.slice(1)} element={LocalRouterMap[item.key]}></Route>
+            <Routes>
+                <Route path='/login' element={<Login />}></Route>
+                <Route path='/' element={<AuthComponent>{<NewsSandBox />}</AuthComponent>}>
+                    {/* 动态创建路由==>路由的创建有问题 */}
+                    {
+                        backrouteList.map(item => {
+                            if (checkRoute(item) && checkUserPermission(item)) {
+                                return <Route path={item.key.slice(1)} key={item.key.slice(1)} element={LocalRouterMap[item.key]}></Route>
+                            }
+                            return null
                         }
-                        return null
+                        )
                     }
-                    )
-                }
-                {/* <Route path='home' element={<Home></Home>}></Route>
+                    {/* <Route path='home' element={<Home></Home>}></Route>
                 <Route path='user-manage/list' element={<UserList></UserList>}></Route>
                 <Route path='right-manage/role/list' element={<RoleList></RoleList>}></Route>
                 <Route path='right-manage/right/list' element={<RightList></RightList>}></Route> */}
-                <Route path='' element={<Redirect to='/home'></Redirect>}></Route>
-                {
-                    // 解决数据没有传输过来导致路由无法渲染的问题(会短暂的存在Notfound的图标)
-                    backrouteList.length > 0 && <Route path='*' element={<NotFound></NotFound>}></Route>
-                }
-            </Route>
-        </Routes>
+                    <Route path='' element={<Redirect to='/home'></Redirect>}></Route>
+                    {
+                        // 解决数据没有传输过来导致路由无法渲染的问题(会短暂的存在Notfound的图标)
+                        backrouteList.length > 0 && <Route path='*' element={<NotFound></NotFound>}></Route>
+                    }
+                </Route>
+            </Routes>
     )
 }
 
