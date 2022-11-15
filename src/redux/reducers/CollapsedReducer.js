@@ -1,7 +1,7 @@
 // 管理侧边栏伸缩的状态
 // 需要定义初始状态
 export const CollapsedReducer = (prevState = {
-    isCollapsed: true
+    isCollapsed: false
 }, action) => {
     let { type } = action;
 
