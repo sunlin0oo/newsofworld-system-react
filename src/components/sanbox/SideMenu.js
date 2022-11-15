@@ -106,7 +106,7 @@ function SideMenu(props) {
       // console.log('MakemenuTree(res.data)', MakemenuTree(res.data));
       setItems(MakemenuTree(res.data))
     })
-  }, [MakemenuTree])
+  }, [])
 
   function click(e) {
     // console.log('e', e);
