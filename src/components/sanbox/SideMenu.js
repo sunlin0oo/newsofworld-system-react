@@ -57,7 +57,7 @@ const { Sider } = Layout;
 
 function SideMenu(props) {
   const [items, setItems] = useState(null);
-  const [collapsed, setCollapsed] = useState(false);
+  // const [collapsed, setCollapsed] = useState(false);
   // 图标映射表
   const IconMap = {
     '/home': <PieChartOutlined />,

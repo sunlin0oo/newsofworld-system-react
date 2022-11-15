@@ -11,7 +11,7 @@ import { Layout, Dropdown, Space, Menu, Avatar } from 'antd';
 import WithRouter from '../WithRouter'
 const { Header } = Layout;
 function TopHeader(props) {
-  console.log('TopHeader-props', props)
+  // console.log('TopHeader-props', props)
   // const [collapsed, setCollapsed] = useState(false);
   const { username, role: { roleName } } = JSON.parse(localStorage.getItem('token'))
   const items = [
