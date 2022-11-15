@@ -4,21 +4,24 @@ import { Outlet } from 'react-router-dom'
 import SideMenu from '../../components/sanbox/SideMenu'
 import TopHeader from '../../components/sanbox/TopHeader'
 // antd
-import { Layout } from 'antd';
+import { Layout, Spin } from 'antd';
 // css
 import './newSandBox.css'
 // 进度条
 import NProgress from 'nprogress';
-import  'nprogress/nprogress.css';
+import 'nprogress/nprogress.css';
+import { connect } from 'react-redux';
 const { Content } = Layout;
-export default function NewsSandBox() {
+function NewsSandBox(props) {
+  // console.log(props);
   NProgress.start();
-  useEffect(()=>{
+  useEffect(() => {
     NProgress.done();
   })
   return (
     <Layout>
       <SideMenu></SideMenu>
+
       <Layout className="site-layout">
         <TopHeader></TopHeader>
         <Content
@@ -27,14 +30,26 @@ export default function NewsSandBox() {
             margin: '24px 16px',
             padding: 24,
             minHeight: 280,
-            overflow:'auto'
+            overflow: 'auto'
           }}
         >
-          {/* 孩子*/}
-          <Outlet></Outlet>
+          <Spin size="large" spinning={props.isLoading}>
+            {/* 孩子*/}
+            <Outlet></Outlet>
+          </Spin>
         </Content>
       </Layout>
+
     </Layout>
 
   )
 }
+
+const mapStateToProps = ({ LoadingReducer: { isLoading } }) => {
+  // 拿取到CollapsedReducer 中的初始值
+  return {
+    isLoading
+  }
+}
+
+export default connect(mapStateToProps)(NewsSandBox)
