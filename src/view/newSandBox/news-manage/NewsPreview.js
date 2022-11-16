@@ -33,7 +33,7 @@ function NewsPreview(props) {
                     <Descriptions.Item label="审核状态" contentStyle={{ color: colorList[newsInfo.auditState] }}>{auditList[newsInfo.auditState]}</Descriptions.Item>
                     <Descriptions.Item label="发布状态" contentStyle={{ color: colorList[newsInfo.auditState] }}>{publishList[newsInfo.publishState]}</Descriptions.Item>
                     <Descriptions.Item label="访问数量">{newsInfo.view}</Descriptions.Item>
-                    <Descriptions.Item label="点赞数量">{newsInfo.start}</Descriptions.Item>
+                    <Descriptions.Item label="点赞数量">{newsInfo.star}</Descriptions.Item>
                     {/* <Descriptions.Item label="评论数量">{newsInfo}</Descriptions.Item> */}
                 </Descriptions>
             </PageHeader>
