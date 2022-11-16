@@ -8,7 +8,6 @@ const { Meta } = Card;
 export default function Home() {
   const [dataViewSource, setDataViewSource] = useState([]);
   const [dataStarSource, setDataStarSource] = useState([]);
-  const [dataColumnSource, setDataColumnStarSource] = useState([]);
   // 解决了跨域问题==>基于node进行处理
   // const ajax=()=>{
   //   // 取数据
