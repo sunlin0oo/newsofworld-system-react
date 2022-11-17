@@ -18,6 +18,8 @@ import AuditList from '../view/newSandBox/audit-manage/AuditList'
 import Unpublished from '../view/newSandBox/publish-manage/Unpublished'
 import Published from '../view/newSandBox/publish-manage/Published'
 import Sunset from '../view/newSandBox/publish-manage/Sunset'
+import Detail from '../view/news/Detail'
+import News from '../view/news/News'
 import axios from 'axios';
 import NewsUpdate from '../view/newSandBox/news-manage/NewsUpdate';
 // 路由存在Bug: 路由权限分布不对，同目录下退出及更新账户不会重新更新信息
@@ -65,6 +67,8 @@ export default function IndexRouter() {
     return (
             <Routes>
                 <Route path='/login' element={<Login />}></Route>
+                <Route path='/news' element={<News />}></Route>
+                <Route path='/detail/:id' element={<Detail />}></Route>
                 <Route path='/' element={<AuthComponent>{<NewsSandBox />}</AuthComponent>}>
                     {/* 动态创建路由==>路由的创建有问题 */}
                     {
